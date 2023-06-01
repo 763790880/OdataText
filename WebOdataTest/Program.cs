@@ -35,15 +35,15 @@ namespace WebOdataTest
 
             app.UseAuthorization();
 
-
             app.MapControllers();
 
             app.Run();
         }
+
         public static IEdmModel GetEdmModel()
         {
             var builder = new ODataConventionModelBuilder();
-            builder.EntitySet<WeatherForecast>("WeatherForecast");
+            builder.EntitySet<WeatherForecast>("WeatherForecast").HasOrdered();
             return builder.GetEdmModel();
         }
     }
