@@ -41,6 +41,7 @@ namespace WebOdataTest.Controllers
             {
                 value.TemperatureF = 5;
             }
+            //问题是最终结果会被再次执行skip
             return Ok(newValues);
         }
     }
