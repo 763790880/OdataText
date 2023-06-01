@@ -34,6 +34,13 @@ namespace WebOdataTest.Controllers
             values = values.OrderBy(x => x.Summary.Contains("晴")).AsQueryable();
             //最终问题
             values = options.ApplyTo(values.AsQueryable()) as IEnumerable<WeatherForecast>;
+            var newValues= values.ToList();
+            //$top=20
+            //想对查询出来得20条数据中得某一属性循环赋值
+            foreach (var value in newValues)
+            {
+                value.TemperatureF = 5;
+            }
             return Ok(values);
         }
     }
