@@ -18,7 +18,7 @@ namespace WebOdataTest.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [EnableQuery]
+        [EnableQuery(EnsureStableOrdering = true)]
         public IActionResult Get()
         {
             IEnumerable<WeatherForecast> values = new List<WeatherForecast>()
@@ -26,8 +26,9 @@ namespace WebOdataTest.Controllers
                 new WeatherForecast() { Summary="阴天",TemperatureC=21,Week=3} ,
                 new WeatherForecast() { Summary="雨天",TemperatureC=23,Week=2} ,
                 new WeatherForecast() { Summary="晴天",TemperatureC=22,Week=1} ,
+                new WeatherForecast() { Summary="晴天1",TemperatureC=25,Week=1} ,
             };
-            values = values.OrderBy(x => x.TemperatureC).AsQueryable();
+            values = values.OrderBy(x => x.Week).AsQueryable();
             return Ok(values);
         }
     }
