@@ -41,7 +41,7 @@ namespace WebOdataTest.Controllers
             {
                 value.TemperatureF = 5;
             }
-            return Ok(values);
+            return Ok(newValues);
         }
     }
 }
