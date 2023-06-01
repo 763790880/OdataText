@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
+using Microsoft.Extensions.Options;
+using Microsoft.OData.Edm;
 
 namespace WebOdataTest.Controllers
 {
@@ -18,9 +20,10 @@ namespace WebOdataTest.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [EnableQuery(EnsureStableOrdering = true)]
-        public IActionResult Get()
+        [EnableQuery(EnsureStableOrdering = false)]
+        public IActionResult Get(ODataQueryOptions<WeatherForecast> options)
         {
+            ///odata/WeatherForecast?$top=20&$skip=3&$count=true
             IEnumerable<WeatherForecast> values = new List<WeatherForecast>()
             {
                 new WeatherForecast() { Summary="阴天",TemperatureC=21,Week=3} ,
@@ -28,7 +31,9 @@ namespace WebOdataTest.Controllers
                 new WeatherForecast() { Summary="晴天",TemperatureC=22,Week=1} ,
                 new WeatherForecast() { Summary="晴天1",TemperatureC=25,Week=1} ,
             };
-            values = values.OrderBy(x => x.Week).AsQueryable();
+            values = values.OrderBy(x => x.Summary.Contains("晴")).AsQueryable();
+            //最终问题
+            values = options.ApplyTo(values.AsQueryable()) as IEnumerable<WeatherForecast>;
             return Ok(values);
         }
     }
