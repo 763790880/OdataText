@@ -28,6 +28,23 @@ namespace TextTSL
                 .SingleOrDefault() as DescriptionAttribute;
             return attribute == null ? value.ToString() : attribute.Description;
         }
+
+        public static async Task<List<OutType>> AsParallelFunc<OutType, InputType>(List<InputType> inputDto, Func<List<InputType>, Task<List<OutType>>> func, int size = 3)
+        {
+            var es = inputDto.Chunk(size);
+            var tasks = es.Select(f => Task.Run(() => func(f.ToList())));
+            var modelList = await Task.WhenAll(tasks);
+            var data = modelList.SelectMany(m => m).ToList();
+            return data;
+        }
+        private static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> val, int chunkSize)
+        {
+            while (val.Any())
+            {
+                yield return val.Take(chunkSize);
+                val = val.Skip(chunkSize);
+            }
+        }
     }
     public enum TypeA
     {
